@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-page-bg text-on-surface font-sans antialiased;
+  }
+}
+
+@layer components {
+  /* Карточка — единый вид всех панелей */
+  .glass-card {
+    @apply bg-surface-container-lowest rounded-xl shadow-card border border-outline-variant/40;
+  }
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}

@@ -1,0 +1,44 @@
+# Прод-стек: PostgreSQL + приложение. Секреты — в .env рядом (шаблон: .env.docker.example).
+# Выкладка: git pull && docker compose up -d --build. Миграции применяет сам сервер при старте.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Задайте POSTGRES_PASSWORD в .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d app"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/app
+      JWT_SECRET: ${JWT_SECRET:?Задайте JWT_SECRET в .env}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
+      # @module:telegram:start
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
+      # @module:telegram:end
+    ports:
+      - "8080:5185"
+    volumes:
+      - uploads:/app/backend/uploads
+      - backups:/app/backend/backups
+
+volumes:
+  pgdata:
+  uploads:
+  backups:

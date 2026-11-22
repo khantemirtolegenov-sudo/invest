@@ -1,0 +1,23 @@
+{
+  "name": "hub-template",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Шаблон внутреннего портала: React + Express + PostgreSQL, права на сервере, генератор инструментов",
+  "type": "module",
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "install:all": "npm install && npm install --prefix backend && npm install --prefix app",
+    "dev": "concurrently -n backend,app -c blue,green \"npm run dev --prefix backend\" \"npm run dev --prefix app\"",
+    "check:acl": "node scripts/check-acl.mjs",
+    "typecheck": "node scripts/check-acl.mjs && npm run typecheck --prefix app",
+    "build": "node scripts/check-acl.mjs && npm run build --prefix app",
+    "new-tool": "node scripts/new-tool.mjs",
+    "db:migrate": "npm run db:migrate --prefix backend",
+    "db:seed": "npm run db:seed --prefix backend",
+    "backup:db": "npm run backup:db --prefix backend",
+    "start": "npm run start --prefix backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

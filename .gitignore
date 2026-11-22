@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.env
+backend/.env
+backend/uploads/
+backend/backups/
+.DS_Store

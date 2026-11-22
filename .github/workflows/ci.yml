@@ -1,0 +1,61 @@
+# Автопроверка на каждый пуш и PR: поломка видна до выкладки, а не у пользователей.
+#  1. сторож прав + типы + сборка;
+#  2. backend поднимается на чистой базе со ВСЕМИ миграциями, health отвечает, без входа — 401;
+#  3. Docker-образ собирается (без публикации).
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: app
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres -d app"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:ci@localhost:5432/app
+      JWT_SECRET: ci-only-secret
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Зависимости
+        run: |
+          npm install --no-audit --no-fund
+          npm install --prefix backend --no-audit --no-fund
+          npm install --prefix app --no-audit --no-fund
+      - name: Права + типы + сборка
+        run: npm run build
+      - name: Backend на чистой базе
+        run: |
+          node backend/src/server.js > backend.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:5185/api/health && break; sleep 2; done
+          curl -fsS http://127.0.0.1:5185/api/health
+      - name: Без входа данные закрыты (401)
+        run: test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:5185/api/db)" = "401"
+      - name: Лог backend при падении
+        if: failure()
+        run: tail -n 200 backend.log || true
+
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: test ! -f Dockerfile || docker build -t app-ci .
