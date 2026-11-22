@@ -8,12 +8,15 @@ import type {
   AppNotification,
   Tool,
   User,
+  ProjectsItem,
 } from '../types';
 
 export interface Database {
   users: User[];
   notifications: AppNotification[];
   tools: Tool[];
+  /** Проекты */
+  projectsItems: ProjectsItem[];
   // @gen:database-field
 }
 
@@ -22,6 +25,7 @@ export function isValidDb(db: Partial<Database> | null): db is Database {
     db &&
       Array.isArray(db.users) &&
       Array.isArray(db.notifications) &&
+      Array.isArray(db.projectsItems) &&
       // @gen:database-check
       Array.isArray(db.tools),
   );
@@ -32,6 +36,7 @@ export function emptyDb(): Database {
     users: [],
     notifications: [],
     tools: [],
+    projectsItems: [],
     // @gen:database-empty
   };
 }

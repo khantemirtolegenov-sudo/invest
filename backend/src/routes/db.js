@@ -12,9 +12,7 @@ import { ApiError, asyncHandler, ok } from '../middleware/errors.js';
 import { applyChangesBatch, getEntity, readRevision, snapshot } from '../db/store.js';
 import { COLLECTIONS, PROTECTED_USER_FIELDS, canRead, checkWrite, isKnownCollection } from '../db/collections.js';
 import { query } from '../db/connection.js';
-// @module:telegram:start
 import { enqueue } from '../services/telegram.js';
-// @module:telegram:end
 
 export const dbRouter = Router();
 
@@ -128,9 +126,7 @@ async function handleSync(req, res) {
   const rev = await applyChangesBatch(changes, req.user.id, async (client) => {
     void client;
     void newNotifications;
-    // @module:telegram:start
     await enqueue(client, newNotifications);
-    // @module:telegram:end
   });
   res.setHeader('X-Db-Revision', String(rev || (await readRevision())));
   ok(res, { applied: Object.keys(changes).length });

@@ -44,3 +44,18 @@ export interface Tool {
   icon?: string;
   path?: string;
 }
+
+/** Проекты (инструмент tool-projects, генератор 22.11.2026) */
+export interface ProjectsItem {
+  id: string;
+  title: string;
+  name?: string;
+  amount?: number;
+  yieldPct?: number;
+  startDate?: string;
+  status?: string;
+  createdAt: string;
+  createdBy: string;
+  updatedAt?: string;
+  updatedBy?: string;
+}

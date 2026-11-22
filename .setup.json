@@ -1,0 +1,13 @@
+{
+  "name": "Invest Hub",
+  "slug": "invest-hub",
+  "purpose": "Учёт инвестпроектов",
+  "modules": {
+    "registration": true,
+    "telegram": true,
+    "files": true,
+    "docker": true,
+    "ci": true
+  },
+  "at": "2026-11-22T08:04:27.394Z"
+}

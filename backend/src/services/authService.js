@@ -8,9 +8,7 @@ import { config } from '../config.js';
 import { applyChanges, applyChangesBatch, getEntity, readCollection } from '../db/store.js';
 import { findUserRowByEmail } from '../db/tables/index.js';
 import { ApiError } from '../middleware/errors.js';
-// @module:telegram:start
 import { enqueue } from './telegram.js';
-// @module:telegram:end
 
 export const uid = (prefix) => `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 export const normalizeEmail = (raw) => String(raw ?? '').trim().toLowerCase();
@@ -89,7 +87,6 @@ export async function resetPasswordByAdmin(admin, userId, password) {
   await applyChanges('users', { upserts: [{ ...user, passwordHash: await hashPassword(password), mustChangePassword: true }] }, admin.id);
 }
 
-// @module:registration:start
 /** Самостоятельная регистрация: аккаунт «ожидает подтверждения», админам — уведомление */
 export async function register(input) {
   validateNew(input);
@@ -119,10 +116,7 @@ export async function register(input) {
   }));
   await applyChangesBatch({ users: { upserts: [user] }, notifications: { upserts: notifications } }, user.id, async (client) => {
     void client;
-    // @module:telegram:start
     await enqueue(client, notifications);
-    // @module:telegram:end
   });
   return sanitizeUser(user);
 }
-// @module:registration:end

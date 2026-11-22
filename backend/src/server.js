@@ -15,13 +15,9 @@ import { ApiError, errorHandler, notFoundHandler, ok } from './middleware/errors
 import { rateLimit, securityHeaders } from './middleware/security.js';
 import { authRouter } from './routes/auth.js';
 import { dbRouter } from './routes/db.js';
-// @module:files:start
 import { filesRouter } from './routes/files.js';
-// @module:files:end
-// @module:telegram:start
 import { telegramRouter } from './routes/telegram.js';
 import { startTelegram, stopTelegram } from './services/telegram.js';
-// @module:telegram:end
 
 const app = express();
 app.disable('x-powered-by');
@@ -52,12 +48,8 @@ app.get('/api/health', async (_req, res, next) => {
 app.use('/api/db', requireAuth, express.json({ limit: config.jsonLimitDb }), dbRouter);
 app.use(express.json({ limit: config.jsonLimitDefault }));
 app.use('/api/auth', rateLimit({ windowMs: 60_000, max: 30 }), authRouter);
-// @module:files:start
 app.use('/api/files', requireAuth, rateLimit({ windowMs: 60_000, max: 120 }), filesRouter);
-// @module:files:end
-// @module:telegram:start
 app.use('/api/telegram', requireAuth, telegramRouter);
-// @module:telegram:end
 
 if (config.staticDir && fs.existsSync(config.staticDir)) {
   app.use(express.static(config.staticDir));
@@ -72,13 +64,9 @@ runMigrations()
     const server = app.listen(config.port, () => {
       console.log(`[server] http://localhost:${config.port} (env=${config.env}), БД: ${safeDbTarget()}`);
     });
-    // @module:telegram:start
     startTelegram();
-    // @module:telegram:end
     const shutdown = () => {
-      // @module:telegram:start
       stopTelegram();
-      // @module:telegram:end
       server.close(() => pool.end().finally(() => process.exit(0)));
       setTimeout(() => process.exit(1), 10_000).unref();
     };

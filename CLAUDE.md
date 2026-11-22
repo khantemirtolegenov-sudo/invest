@@ -1,6 +1,6 @@
-# {{PROJECT_NAME}} — правила работы
+# Invest Hub — правила работы
 
-{{PROJECT_PURPOSE}}. Монорепо: `backend/` (Express + PostgreSQL, ESM, без TS) и `app/`
+Учёт инвестпроектов. Монорепо: `backend/` (Express + PostgreSQL, ESM, без TS) и `app/`
 (React 18 + TypeScript + Vite + Tailwind 3). Язык проекта — русский: интерфейс, ошибки,
 комментарии, коммиты, документация. Процесс работы целиком — [PLAYBOOK.md](PLAYBOOK.md).
 
@@ -123,4 +123,5 @@ npm run setup -- --yes --name "…" --slug … --purpose "…" --modules registr
 
 | Файл | Инструмент |
 | :--- | :--- |
+| [projects.md](docs/tools/projects.md) | Проекты |
 <!-- @gen:docs-index -->

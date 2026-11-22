@@ -18,6 +18,8 @@ export const hasManagerRights = (u?: User | null) => u?.role === 'manager' || u?
 export const ADMIN_ONLY_TOOLS: string[] = [/* @gen:admin-only */];
 
 export const TOOL_RULES: Record<string, (u: User) => boolean> = {
+  // Проекты
+  'tool-projects': (u) => hasManagerRights(u),
   // @gen:tool-rules
 };
 

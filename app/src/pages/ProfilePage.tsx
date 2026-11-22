@@ -1,10 +1,8 @@
 /** Профиль: своя карточка, смена пароля, (модуль telegram) привязка бота */
 import { useState } from 'react';
 import { authApi, usersApi } from '../api';
-// @module:telegram:start
 import { telegramApi } from '../api';
 import { useAsync } from '../hooks/useAsync';
-// @module:telegram:end
 import { Page } from '../components/layout/AppLayout';
 import { Button } from '../components/ui/Button';
 import { Field, TextInput } from '../components/ui/Form';
@@ -73,16 +71,13 @@ export function ProfilePage() {
               Сменить пароль
             </Button>
           </form>
-          {/* @module:telegram:start */}
           <TelegramCard />
-          {/* @module:telegram:end */}
         </div>
       </div>
     </Page>
   );
 }
 
-// @module:telegram:start
 function TelegramCard() {
   const { data, loading, reload } = useAsync(() => telegramApi.status(), []);
   if (loading || !data?.enabled) return null;
@@ -113,4 +108,3 @@ function TelegramCard() {
     </div>
   );
 }
-// @module:telegram:end

@@ -8,9 +8,6 @@ export * from './modules/auth';
 export * from './modules/users';
 export * from './modules/notifications';
 export * from './modules/tools';
-// @module:files:start
 export * from './modules/files';
-// @module:files:end
-// @module:telegram:start
 export * from './modules/telegram';
-// @module:telegram:end
+export * from './modules/projects';

@@ -1,8 +1,6 @@
 /** Вход и (модуль registration) заявка на регистрацию */
 import { useState, type FormEvent, type ReactNode } from 'react';
-// @module:registration:start
 import type { ChangeEvent } from 'react';
-// @module:registration:end
 import { authApi } from '../api';
 import { BrandMark } from '../components/layout/AppLayout';
 import { Button } from '../components/ui/Button';
@@ -12,11 +10,9 @@ import { toast } from '../store/toast';
 
 export function LoginPage() {
   let onRegister: (() => void) | undefined;
-  // @module:registration:start
   const [registering, setRegistering] = useState(false);
   if (registering) return <RegisterForm onBack={() => setRegistering(false)} />;
   onRegister = () => setRegistering(true);
-  // @module:registration:end
   return <LoginForm onRegister={onRegister} />;
 }
 
@@ -70,7 +66,6 @@ function LoginForm({ onRegister }: { onRegister?: () => void }) {
   );
 }
 
-// @module:registration:start
 function RegisterForm({ onBack }: { onBack: () => void }) {
   const [form, setForm] = useState({ name: '', email: '', password: '', department: '', position: '' });
   const [busy, setBusy] = useState(false);
@@ -116,4 +111,3 @@ function RegisterForm({ onBack }: { onBack: () => void }) {
     </Shell>
   );
 }
-// @module:registration:end

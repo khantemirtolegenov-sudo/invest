@@ -15,9 +15,7 @@ import {
   changePassword,
   createUserByAdmin,
   login,
-  // @module:registration:start
   register,
-  // @module:registration:end
   resetPasswordByAdmin,
 } from '../services/authService.js';
 
@@ -43,12 +41,10 @@ authRouter.post(
   }),
 );
 
-// @module:registration:start
 authRouter.post(
   '/register',
   asyncHandler(async (req, res) => ok(res, await register(req.body ?? {}))),
 );
-// @module:registration:end
 
 authRouter.post(
   '/users',

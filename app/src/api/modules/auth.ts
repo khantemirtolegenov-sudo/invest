@@ -37,10 +37,8 @@ export const authApi = {
   changePassword: (currentPassword: string, newPassword: string) =>
     apiFetch<User>('/api/auth/change-password', { method: 'POST', body: { currentPassword, newPassword } }),
 
-  // @module:registration:start
   register: (input: { name: string; email: string; password: string; department?: string; position?: string }) =>
     apiFetch<User>('/api/auth/register', { method: 'POST', body: input }),
-  // @module:registration:end
 
   /** Админ: новый сотрудник с временным паролем (сменит при первом входе) */
   async createUser(input: { name: string; email: string; password: string; role: User['role']; department?: string; position?: string }): Promise<User> {

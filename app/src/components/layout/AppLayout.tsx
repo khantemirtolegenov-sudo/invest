@@ -14,7 +14,7 @@ import { useAuth } from '../../store/auth';
 import { isAdmin } from '../../utils/permissions';
 import { Icon } from '../ui/Icon';
 
-export const PROJECT_NAME = '{{PROJECT_NAME}}';
+export const PROJECT_NAME = 'Invest Hub';
 
 /** Знак бренда: монограмма в золотом кольце + название антиквой */
 export function BrandMark({ large }: { large?: boolean }) {

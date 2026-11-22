@@ -28,10 +28,8 @@ services:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/app
       JWT_SECRET: ${JWT_SECRET:?Задайте JWT_SECRET в .env}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
-      # @module:telegram:start
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
       TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
-      # @module:telegram:end
     ports:
       - "8080:5185"
     volumes:

@@ -66,11 +66,24 @@ export const toolsTable = flatTable('tools', 'tools', [
   ['path', 'path', 'text'],
 ]);
 
+/** Проекты (tool-projects) — генератор 22.11.2026 */
+export const projectsItemsTable = flatTable('projectsItems', 'projects_items', [
+  ['title', 'title', 'text'],
+  ['name', 'name', 'text'],
+  ['amount', 'amount', 'float'],
+  ['yieldPct', 'yield_pct', 'float'],
+  ['startDate', 'start_date', 'date'],
+  ['status', 'status', 'text'],
+  ['createdAt', 'created_at', 'text'],
+  ['createdBy', 'created_by', 'text'],
+]);
+
 // @gen:simple-tables
 
 export const SIMPLE_TABLES = [
   usersTable,
   notificationsTable,
   toolsTable,
+  projectsItemsTable,
   // @gen:simple-tables-list
 ];

@@ -16,6 +16,8 @@ export const COLLECTIONS = {
   // Уведомления создаёт любой (так сервисный слой сообщает коллегам), правит и удаляет — адресат
   notifications: { kind: 'array', read: 'any', write: 'any', ownerField: 'userId' },
   tools: { kind: 'array', read: 'any', write: 'admin' },
+  // Проекты (tool-projects)
+  projectsItems: { kind: 'array', read: 'manager', write: 'manager' },
   // @gen:collections
 };
 

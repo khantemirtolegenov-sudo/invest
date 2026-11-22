@@ -1,5 +1,5 @@
 {
-  "name": "hub-template",
+  "name": "invest-hub",
   "private": true,
   "version": "1.0.0",
   "description": "Шаблон внутреннего портала: React + Express + PostgreSQL, права на сервере, генератор инструментов",

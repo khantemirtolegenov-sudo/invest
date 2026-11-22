@@ -20,6 +20,7 @@ const HomePage = lazy(() => named(import('./pages/HomePage'), 'HomePage'));
 const NotificationsPage = lazy(() => named(import('./pages/NotificationsPage'), 'NotificationsPage'));
 const ProfilePage = lazy(() => named(import('./pages/ProfilePage'), 'ProfilePage'));
 const UsersPage = lazy(() => named(import('./pages/UsersPage'), 'UsersPage'));
+const ProjectsPage = lazy(() => named(import('./pages/tools/projects/ProjectsPage'), 'ProjectsPage'));
 // @gen:lazy-pages
 
 // RequireTool используется маршрутами инструментов (их добавляет генератор)
@@ -65,6 +66,14 @@ export function App() {
                   <RequireAdmin>
                     <UsersPage />
                   </RequireAdmin>
+                }
+              />
+              <Route
+                path="/tools/projects"
+                element={
+                  <RequireTool tool="tool-projects">
+                    <ProjectsPage />
+                  </RequireTool>
                 }
               />
               {/* @gen:routes */}
