@@ -42,7 +42,7 @@ export function NotificationsPage() {
           {data.map((n) => {
             const body = (
               <div className={`glass-card p-card-padding flex gap-3 ${n.read ? 'opacity-70' : ''}`}>
-                <Icon name={n.icon ?? 'notifications'} className="text-accent" />
+                <Icon name={n.icon ?? 'notifications'} className="text-info" />
                 <div className="min-w-0 flex-1">
                   <div className="text-body-sm font-semibold text-on-surface">{n.title}</div>
                   {n.text && <div className="text-body-sm text-on-surface-variant">{n.text}</div>}

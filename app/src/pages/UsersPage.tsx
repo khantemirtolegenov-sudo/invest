@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { authApi, toolsApi, usersApi } from '../api';
 import { Page } from '../components/layout/AppLayout';
 import { Button } from '../components/ui/Button';
-import { Field, Select, TextInput } from '../components/ui/Form';
+import { Field, Select, TextInput, Toggle } from '../components/ui/Form';
 import { Modal } from '../components/ui/Modal';
 import { CardSkeleton, EmptyState, ErrorState } from '../components/ui/States';
 import { useAsync } from '../hooks/useAsync';
@@ -57,7 +57,7 @@ export function UsersPage() {
         <>
           {pending.length > 0 && (
             <div className="glass-card p-card-padding space-y-2">
-              <div className="text-label-bold uppercase text-warning">Ждут подтверждения: {pending.length}</div>
+              <div className="eyebrow !text-warning">Ждут подтверждения: {pending.length}</div>
               {pending.map((u) => (
                 <div key={u.id} className="flex flex-wrap items-center gap-2 justify-between">
                   <span className="text-body-sm">
@@ -83,36 +83,33 @@ export function UsersPage() {
                       {u.department ? ` · ${u.department}` : ''}
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Select value={u.role} onChange={(e) => update(u, { role: e.target.value as Role })} className="!w-auto !py-1.5">
+                  <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 w-full sm:w-auto">
+                    <Select value={u.role} onChange={(e) => update(u, { role: e.target.value as Role })} className="sm:!w-auto !py-1.5 !rounded-full">
                       {Object.entries(ROLES).map(([v, l]) => (
                         <option key={v} value={v}>{l}</option>
                       ))}
                     </Select>
-                    <Select value={u.status} onChange={(e) => update(u, { status: e.target.value as UserStatus })} className="!w-auto !py-1.5">
+                    <Select value={u.status} onChange={(e) => update(u, { status: e.target.value as UserStatus })} className="sm:!w-auto !py-1.5 !rounded-full">
                       {Object.entries(STATUSES).map(([v, l]) => (
                         <option key={v} value={v}>{l}</option>
                       ))}
                     </Select>
-                    <Button size="sm" variant="ghost" icon="key" onClick={() => resetPassword(u)}>Пароль</Button>
+                    <Button size="sm" variant="ghost" icon="key" className="col-span-2 sm:col-span-1" onClick={() => resetPassword(u)}>Пароль</Button>
                   </div>
                 </div>
                 {grantable.length > 0 && u.role !== 'admin' && (
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-x-5 gap-y-3 pt-3 border-t border-ice-100/10">
                     {grantable.map((t) => {
                       const on = u.toolAccess?.includes(t.id) ?? false;
                       return (
-                        <label key={t.id} className="flex items-center gap-1.5 text-body-sm cursor-pointer">
-                          <input
-                            type="checkbox"
-                            className="accent-primary"
-                            checked={on}
-                            onChange={() =>
-                              update(u, { toolAccess: on ? (u.toolAccess ?? []).filter((x) => x !== t.id) : [...(u.toolAccess ?? []), t.id] })
-                            }
-                          />
-                          {t.name}
-                        </label>
+                        <Toggle
+                          key={t.id}
+                          label={t.name}
+                          checked={on}
+                          onChange={() =>
+                            update(u, { toolAccess: on ? (u.toolAccess ?? []).filter((x) => x !== t.id) : [...(u.toolAccess ?? []), t.id] })
+                          }
+                        />
                       );
                     })}
                   </div>
@@ -149,10 +146,11 @@ function CreateUser({ open, onClose, onDone }: { open: boolean; onClose: () => v
       open={open}
       title="Новый сотрудник"
       onClose={onClose}
+      onSubmit={save}
       footer={
         <>
           <Button variant="secondary" onClick={onClose}>Отмена</Button>
-          <Button loading={busy} onClick={save}>Добавить</Button>
+          <Button type="submit" loading={busy}>Добавить</Button>
         </>
       }
     >

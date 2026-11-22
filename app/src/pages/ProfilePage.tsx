@@ -8,6 +8,7 @@ import { useAsync } from '../hooks/useAsync';
 import { Page } from '../components/layout/AppLayout';
 import { Button } from '../components/ui/Button';
 import { Field, TextInput } from '../components/ui/Form';
+import { Icon } from '../components/ui/Icon';
 import { useAuth } from '../store/auth';
 import { toast } from '../store/toast';
 
@@ -43,11 +44,11 @@ export function ProfilePage() {
   return (
     <Page title="Профиль" subtitle={user.email}>
       {user.mustChangePassword && (
-        <div className="glass-card p-card-padding text-body-sm text-warning">У вас временный пароль — смените его ниже.</div>
+        <div className="glass-card p-card-padding text-body-sm text-warning flex items-center gap-2 border-warning/25"><Icon name="warning" />У вас временный пароль — смените его ниже.</div>
       )}
       <div className="grid gap-5 lg:grid-cols-2 items-start">
-        <div className="glass-card p-card-padding space-y-4">
-          <div className="text-headline-md">Карточка</div>
+        <form className="glass-card p-card-padding space-y-4" onSubmit={(e) => { e.preventDefault(); void saveCard(); }}>
+          <div className="font-display text-headline-md lg:text-display-lg-mobile">Карточка</div>
           <Field label="Имя и фамилия">
             <TextInput value={card.name} onChange={(e) => setCard({ ...card, name: e.target.value })} />
           </Field>
@@ -57,21 +58,21 @@ export function ProfilePage() {
           <Field label="Должность">
             <TextInput value={card.position} onChange={(e) => setCard({ ...card, position: e.target.value })} />
           </Field>
-          <Button onClick={saveCard}>Сохранить</Button>
-        </div>
+          <Button type="submit">Сохранить</Button>
+        </form>
         <div className="space-y-5">
-          <div className="glass-card p-card-padding space-y-4">
-            <div className="text-headline-md">Пароль</div>
+          <form className="glass-card p-card-padding space-y-4" onSubmit={(e) => { e.preventDefault(); if (pw.current && pw.next.length >= 8) void changePassword(); }}>
+            <div className="font-display text-headline-md lg:text-display-lg-mobile">Пароль</div>
             <Field label="Текущий пароль">
               <TextInput type="password" autoComplete="current-password" value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} />
             </Field>
             <Field label="Новый пароль" hint="Не короче 8 символов">
               <TextInput type="password" autoComplete="new-password" value={pw.next} onChange={(e) => setPw({ ...pw, next: e.target.value })} />
             </Field>
-            <Button loading={busy} onClick={changePassword} disabled={!pw.current || pw.next.length < 8}>
+            <Button type="submit" loading={busy} disabled={!pw.current || pw.next.length < 8}>
               Сменить пароль
             </Button>
-          </div>
+          </form>
           {/* @module:telegram:start */}
           <TelegramCard />
           {/* @module:telegram:end */}
@@ -100,7 +101,7 @@ function TelegramCard() {
   };
   return (
     <div className="glass-card p-card-padding space-y-3">
-      <div className="text-headline-md">Telegram</div>
+      <div className="font-display text-headline-md lg:text-display-lg-mobile">Telegram</div>
       <div className="text-body-sm text-on-surface-variant">
         {data.linked ? 'Уведомления приходят в Telegram.' : 'Подключите бота — уведомления будут приходить и в Telegram.'}
       </div>

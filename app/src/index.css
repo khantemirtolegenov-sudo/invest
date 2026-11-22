@@ -1,19 +1,177 @@
+/**
+ * Глобальные стили. Дизайн — «жидкое стекло» библиотеки glisse поверх тёмной палитры
+ * Obsidian / Ice Grey / Champagne Gold. Переменные --lg-* перекрашивают компоненты glisse
+ * в цвета бренда; значения согласованы с tailwind.config.js (менять парой).
+ */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Тема glisse: всегда тёмная, в цветах бренда (селектор сильнее :where() библиотеки) */
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --lg-foreground: #e6eaee;
+  --lg-muted: rgb(152 162 173 / 0.9);
+  --lg-glass: rgb(26 26 31 / 0.55);
+  --lg-glass-active: rgb(42 42 49 / 0.7);
+  --lg-edge: rgb(230 234 238 / 0.1);
+  --lg-selection: rgb(212 184 120 / 0.18);
+  --lg-surface: rgb(20 20 24 / 0.9);
+  --lg-surface-edge: rgb(230 234 238 / 0.12);
+  --lg-shadow: rgb(0 0 0 / 0.55);
+  --lg-highlight: rgb(230 234 238 / 0.1);
+  --lg-separator: rgb(230 234 238 / 0.12);
+  --lg-destructive: #ff7b6b;
+  --lg-track: rgb(230 234 238 / 0.22);
+  --lg-on: #d4b878;
+  --lg-fill: #d4b878;
+  --lg-ring: rgb(212 184 120 / 0.7);
+}
+
 @layer base {
   body {
-    @apply bg-page-bg text-on-surface font-sans antialiased;
+    @apply bg-page-bg text-on-surface font-sans antialiased min-h-screen;
+    /* Фон-«сцена»: стеклу нужно что преломлять. Едва заметные блики ice и gold. */
+    background-image:
+      radial-gradient(60rem 40rem at 85% -10%, rgb(212 184 120 / 0.07), transparent 60%),
+      radial-gradient(50rem 40rem at -10% 110%, rgb(201 208 215 / 0.06), transparent 60%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    @apply bg-gold/30 text-on-surface;
+  }
+  /* Поля ввода подсвечивают рамку сами — кольцо только у кнопок/ссылок */
+  :focus-visible:not(input):not(textarea):not(select):not(.lg-button):not(.lg-switch) {
+    @apply outline-none ring-2 ring-gold/70 ring-offset-2 ring-offset-page-bg;
+  }
+  select option {
+    @apply bg-surface-container-low text-on-surface;
+  }
+  /* Нативные чекбоксы/радио — в золото */
+  input[type='checkbox'],
+  input[type='radio'] {
+    accent-color: theme('colors.gold.DEFAULT');
+  }
+  /* Скроллбары в тон */
+  * {
+    scrollbar-color: theme('colors.obsidian.700') transparent;
   }
 }
 
 @layer components {
-  /* Карточка — единый вид всех панелей */
+  /* Карточка — единый вид всех панелей: дымчатое стекло на obsidian */
   .glass-card {
-    @apply bg-surface-container-lowest rounded-xl shadow-card border border-outline-variant/40;
+    @apply rounded-xl border border-ice-100/10 shadow-card;
+    background-color: rgb(20 20 24 / 0.72);
+    -webkit-backdrop-filter: blur(18px) saturate(1.3);
+    backdrop-filter: blur(18px) saturate(1.3);
   }
   .material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
   }
+
+  /* Подпись-«капитель»: мелкий разреженный верхний регистр — подпись полей, разделов, KPI */
+  .eyebrow {
+    @apply text-label-bold uppercase tracking-caps text-muted font-semibold;
+  }
+
+  /* Волосяная линия с золотым началом — фирменный разделитель */
+  .gold-rule {
+    height: 1px;
+    background: linear-gradient(90deg, theme('colors.gold.DEFAULT') 0, theme('colors.gold.DEFAULT') 24px, rgb(230 234 238 / 0.1) 24px, rgb(230 234 238 / 0.04));
+  }
+
+  /* Кнопки glisse в нашей сетке размеров */
+  .hub-btn.lg-button {
+    @apply font-medium whitespace-nowrap;
+    border-radius: 999px;
+  }
+  .hub-btn.lg-button .material-symbols-outlined {
+    font-size: 18px;
+  }
+  .hub-btn-sm.lg-button {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+  .hub-btn-sm.lg-button[data-icon] {
+    padding-left: 9px;
+  }
+  /* Главная — золото, текст obsidian (контраст ≥ 9:1) */
+  .hub-btn-primary.lg-button[data-variant='filled'] {
+    color: theme('colors.obsidian.950');
+    font-weight: 600;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), 0 8px 24px -12px rgb(212 184 120 / 0.6);
+  }
+  .hub-btn-ghost.lg-button:not(:hover):not([data-pressed]) {
+    background-color: transparent;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* Select: своя стрелка вместо системной */
+  .hub-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5 6 7.5 9 4.5' fill='none' stroke='%2398A2AD' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+
+  .lg-switch {
+    --lg-scale: 0.3;
+  }
+}
+
+/* Плёночное зерно поверх фона — убирает «пластиковую» гладкость тёмных заливок */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Стеклянные панели каркаса (сайдбар, шапка) */
+.hub-panel.lg-glass {
+  border-radius: 22px;
+  --lg-blur: 24px;
+  background-color: rgb(16 16 20 / 0.62);
+}
+
+/* У Instrument Serif одно начертание — запрещаем браузеру «дорисовывать» жирный */
+.font-display {
+  font-weight: 400 !important;
+  font-synthesis: none;
+}
+.tabular-nums,
+table {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Неактивная главная кнопка не тратит золото */
+.hub-btn-primary.lg-button[data-variant='filled']:disabled {
+  background-color: rgb(230 234 238 / 0.08);
+  color: theme('colors.muted');
+  box-shadow: none;
+  opacity: 1;
+}
+/* Тёмная щель между кольцом фокуса и золотой кнопкой */
+.hub-btn.lg-button:focus-visible {
+  outline-offset: 3px;
 }

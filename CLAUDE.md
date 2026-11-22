@@ -85,6 +85,13 @@ npm run setup -- --yes --name "…" --slug … --purpose "…" --modules registr
 - **UI: только токены** `tailwind.config.js` (цвета, `text-headline-md`, `text-body-sm`,
   `glass-card`, `p-card-padding`) и компоненты `app/src/components/ui`. Сырые hex и px — нельзя.
   Mobile-first, desktop — `lg` (1100px).
+- **Дизайн:** тёмная тема, стекло glisse (`Button`, `Glass`, `Switch` — через обёртки в `ui/`).
+  Бренд 70/25/5: Obsidian (фон, поверхности) / Ice Grey (текст, линии) / Champagne Gold
+  (`gold`/`primary` — только активный пункт, главная кнопка, выбранный фильтр, прогресс;
+  **не** прибыль). Показатели — `positive`/`negative` (только финрезультат к базе), `warning`
+  (риски), `info` (события), `neutral` (нет изменений); цвет всегда дублируется знаком ±,
+  иконкой или текстом — компоненты `ui/Indicators` (`Delta`, `Badge`, `Stat`, `Progress`).
+  Серии графиков — `chart-1…6`, не зелёный/красный. Заголовки — `font-display` (антиква).
 - Каждый экран рисует три состояния: загрузка, ошибка с «Повторить», пусто. Успех —
   `toast.success`, отказ — `toast.error(e.message)`.
 - localStorage: токен, ящик неотправленного и личные удобства с ключом `hub.*`. Данные — только в базе.

@@ -26,12 +26,12 @@ export function HomePage() {
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {data.map((t) => (
-            <Link key={t.id} to={t.path ?? '/'} className="glass-card p-card-padding flex gap-3 hover:shadow-lg transition-shadow">
-              <span className="w-11 h-11 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+            <Link key={t.id} to={t.path ?? '/'} className="group glass-card p-card-padding flex gap-4 transition-colors hover:border-gold/30">
+              <span className="w-11 h-11 rounded-full border border-ice-100/15 text-on-surface-variant group-hover:text-gold group-hover:border-gold/40 transition-colors flex items-center justify-center shrink-0">
                 <Icon name={t.icon ?? 'widgets'} />
               </span>
               <span className="min-w-0">
-                <span className="block text-body-lg font-semibold text-on-surface">{t.name}</span>
+                <span className="flex items-center gap-1 text-body-lg font-medium text-on-surface">{t.name}<Icon name="arrow_outward" className="text-body-sm text-muted opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" /></span>
                 {t.description && <span className="block text-body-sm text-muted">{t.description}</span>}
               </span>
             </Link>

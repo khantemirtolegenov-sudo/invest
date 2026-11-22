@@ -4,7 +4,7 @@ import { useState, type FormEvent, type ReactNode } from 'react';
 import type { ChangeEvent } from 'react';
 // @module:registration:end
 import { authApi } from '../api';
-import { PROJECT_NAME } from '../components/layout/AppLayout';
+import { BrandMark } from '../components/layout/AppLayout';
 import { Button } from '../components/ui/Button';
 import { Field, TextInput } from '../components/ui/Form';
 import { useAuth } from '../store/auth';
@@ -23,10 +23,10 @@ export function LoginPage() {
 function Shell({ subtitle, children, onSubmit }: { subtitle: string; children: ReactNode; onSubmit: (e: FormEvent) => void }) {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <form onSubmit={onSubmit} className="glass-card w-full max-w-sm p-card-padding space-y-4">
+      <form onSubmit={onSubmit} className="glass-card w-full max-w-sm p-6 sm:p-8 space-y-5">
         <div>
-          <div className="text-display-lg-mobile text-primary">{PROJECT_NAME}</div>
-          <div className="text-body-sm text-muted">{subtitle}</div>
+          <div className="mb-6"><BrandMark large /></div>
+          <div className="eyebrow mt-1">{subtitle}</div>
         </div>
         {children}
       </form>
@@ -62,7 +62,7 @@ function LoginForm({ onRegister }: { onRegister?: () => void }) {
         Войти
       </Button>
       {onRegister && (
-        <button type="button" className="w-full text-body-sm text-accent" onClick={onRegister}>
+        <button type="button" className="w-full text-body-sm text-muted hover:text-gold transition-colors" onClick={onRegister}>
           Нет аккаунта? Зарегистрироваться
         </button>
       )}
@@ -110,7 +110,7 @@ function RegisterForm({ onBack }: { onBack: () => void }) {
       <Button type="submit" className="w-full" loading={busy}>
         Отправить заявку
       </Button>
-      <button type="button" className="w-full text-body-sm text-accent" onClick={onBack}>
+      <button type="button" className="w-full text-body-sm text-muted hover:text-gold transition-colors" onClick={onBack}>
         Уже есть аккаунт? Войти
       </button>
     </Shell>

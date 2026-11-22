@@ -1,4 +1,9 @@
-/** Кнопка проекта: варианты и размеры — только отсюда, свои кнопки в страницах не рисуем */
+/**
+ * Кнопка проекта: варианты и размеры — только отсюда, свои кнопки в страницах не рисуем.
+ * Основа — «жидкое стекло» glisse (преломление, отклик на нажатие). Золото (filled) —
+ * только у главного действия экрана; остальное — прозрачное стекло цвета ice.
+ */
+import { Button as GlassButton } from 'glisse';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import { Icon } from './Icon';
 
@@ -6,12 +11,12 @@ type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
 type Size = 'sm' | 'md';
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-primary text-on-primary hover:bg-primary-container shadow-card',
-  secondary: 'bg-surface-container-lowest border border-outline-variant text-primary hover:bg-surface-container-low',
-  ghost: 'text-primary hover:bg-surface-container',
-  danger: 'bg-danger text-on-primary hover:opacity-90',
+  primary: 'hub-btn-primary',
+  secondary: '',
+  ghost: 'hub-btn-ghost',
+  danger: '',
 };
-const sizes: Record<Size, string> = { sm: 'px-3 py-1.5 text-body-sm', md: 'px-4 py-2.5 text-body-sm' };
+const sizes: Record<Size, string> = { sm: 'hub-btn-sm', md: '' };
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
@@ -21,15 +26,24 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
 }
 
-export function Button({ variant = 'primary', size = 'md', icon, loading, children, className = '', disabled, ...rest }: Props) {
+export function Button({ variant = 'primary', size = 'md', icon, loading, children, className = '', disabled, type = 'button', ...rest }: Props) {
+  const glyph = loading ? (
+    <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+  ) : icon ? (
+    <Icon name={icon} className="text-body-lg" />
+  ) : undefined;
   return (
-    <button
-      className={`inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none ${variants[variant]} ${sizes[size]} ${className}`}
+    <GlassButton
+      type={type}
+      variant={variant === 'primary' ? 'filled' : 'glass'}
+      destructive={variant === 'danger'}
+      icon={glyph}
+      className={`hub-btn ${variants[variant]} ${sizes[size]} ${className}`}
       disabled={disabled || loading}
+      aria-busy={loading || undefined}
       {...rest}
     >
-      {loading ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> : icon && <Icon name={icon} className="text-body-lg" />}
       {children}
-    </button>
+    </GlassButton>
   );
 }
