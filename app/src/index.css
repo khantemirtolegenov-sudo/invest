@@ -175,3 +175,26 @@ table {
 .hub-btn.lg-button:focus-visible {
   outline-offset: 3px;
 }
+
+/* Фильтр-сегменты glisse: выбранный — золотая подпись на стекле (выбранный фильтр = 5%-акцент) */
+.hub-segmented.lg-segmented {
+  --lg-tab-width: 136px;
+  --lg-tab-height: 38px;
+  --lg-segment-thumb: rgb(212 184 120 / 0.16);
+  --lg-segment-label: #c9d0d7;
+}
+.hub-segmented .lg-tab[data-selected],
+.hub-segmented .lg-tab-copy[data-selected] {
+  color: theme('colors.gold.DEFAULT');
+}
+input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(0.75);
+  cursor: pointer;
+}
+/* Горизонтальная лента без системного скроллбара (свайп/колесо работают) */
+.hub-scroll-x {
+  scrollbar-width: none;
+}
+.hub-scroll-x::-webkit-scrollbar {
+  display: none;
+}

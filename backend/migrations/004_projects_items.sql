@@ -3,7 +3,6 @@
 CREATE TABLE IF NOT EXISTS projects_items (
   id               TEXT PRIMARY KEY,
   title            TEXT,
-  name             TEXT,
   amount           DOUBLE PRECISION,
   yield_pct        DOUBLE PRECISION,
   start_date       DATE,
@@ -16,5 +15,5 @@ CREATE TABLE IF NOT EXISTS projects_items (
 );
 
 INSERT INTO tools (id, name, description, icon, path)
-VALUES ('tool-projects', 'Проекты', 'Проекты: список, создание и правка записей.', 'widgets', '/tools/projects')
+VALUES ('tool-projects', 'Проекты', 'Портфель инвестпроектов: объём вложений, доходность, статусы.', 'account_balance', '/tools/projects')
 ON CONFLICT (id) DO NOTHING;

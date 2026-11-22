@@ -46,14 +46,20 @@ export interface Tool {
 }
 
 /** Проекты (инструмент tool-projects, генератор 22.11.2026) */
+/** Этапы жизни инвестпроекта */
+export type ProjectStatus = 'planned' | 'active' | 'paused' | 'closed';
+
 export interface ProjectsItem {
   id: string;
+  /** Название проекта */
   title: string;
-  name?: string;
+  /** Объём инвестиций, ₸ */
   amount?: number;
+  /** Доходность, % годовых (может быть отрицательной) */
   yieldPct?: number;
+  /** Дата старта, YYYY-MM-DD */
   startDate?: string;
-  status?: string;
+  status?: ProjectStatus;
   createdAt: string;
   createdBy: string;
   updatedAt?: string;

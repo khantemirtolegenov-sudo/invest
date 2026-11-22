@@ -69,7 +69,6 @@ export const toolsTable = flatTable('tools', 'tools', [
 /** Проекты (tool-projects) — генератор 22.11.2026 */
 export const projectsItemsTable = flatTable('projectsItems', 'projects_items', [
   ['title', 'title', 'text'],
-  ['name', 'name', 'text'],
   ['amount', 'amount', 'float'],
   ['yieldPct', 'yield_pct', 'float'],
   ['startDate', 'start_date', 'date'],
