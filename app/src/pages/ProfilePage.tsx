@@ -46,7 +46,7 @@ export function ProfilePage() {
       )}
       <div className="grid gap-5 lg:grid-cols-2 items-start">
         <form className="glass-card p-card-padding space-y-4" onSubmit={(e) => { e.preventDefault(); void saveCard(); }}>
-          <div className="font-display text-headline-md lg:text-display-lg-mobile">Карточка</div>
+          <div className="font-display text-headline-md">Карточка</div>
           <Field label="Имя и фамилия">
             <TextInput value={card.name} onChange={(e) => setCard({ ...card, name: e.target.value })} />
           </Field>
@@ -60,7 +60,7 @@ export function ProfilePage() {
         </form>
         <div className="space-y-5">
           <form className="glass-card p-card-padding space-y-4" onSubmit={(e) => { e.preventDefault(); if (pw.current && pw.next.length >= 8) void changePassword(); }}>
-            <div className="font-display text-headline-md lg:text-display-lg-mobile">Пароль</div>
+            <div className="font-display text-headline-md">Пароль</div>
             <Field label="Текущий пароль">
               <TextInput type="password" autoComplete="current-password" value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} />
             </Field>
@@ -96,7 +96,7 @@ function TelegramCard() {
   };
   return (
     <div className="glass-card p-card-padding space-y-3">
-      <div className="font-display text-headline-md lg:text-display-lg-mobile">Telegram</div>
+      <div className="font-display text-headline-md">Telegram</div>
       <div className="text-body-sm text-on-surface-variant">
         {data.linked ? 'Уведомления приходят в Telegram.' : 'Подключите бота — уведомления будут приходить и в Telegram.'}
       </div>

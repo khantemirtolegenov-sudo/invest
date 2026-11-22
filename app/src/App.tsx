@@ -10,6 +10,7 @@ import { AppLayout } from './components/layout/AppLayout';
 import { RequireAdmin, RequireTool } from './components/layout/guards';
 import { Spinner } from './components/ui/States';
 import { Toasts } from './components/ui/Toasts';
+import { Terrain } from './components/layout/Terrain';
 import { useAuth } from './store/auth';
 import { LoginPage } from './pages/LoginPage';
 
@@ -17,6 +18,7 @@ const named = <T extends Record<string, unknown>, K extends keyof T>(p: Promise<
   p.then((m) => ({ default: m[key] as unknown as ComponentType }));
 
 const HomePage = lazy(() => named(import('./pages/HomePage'), 'HomePage'));
+const NotFoundPage = lazy(() => named(import('./pages/NotFoundPage'), 'NotFoundPage'));
 const NotificationsPage = lazy(() => named(import('./pages/NotificationsPage'), 'NotificationsPage'));
 const ProfilePage = lazy(() => named(import('./pages/ProfilePage'), 'ProfilePage'));
 const UsersPage = lazy(() => named(import('./pages/UsersPage'), 'UsersPage'));
@@ -50,6 +52,7 @@ export function App() {
   if (booting) return <Loading />;
   return (
     <BrowserRouter>
+      <Terrain />
       <Toasts />
       {!user ? (
         <LoginPage />
@@ -77,7 +80,7 @@ export function App() {
                 }
               />
               {/* @gen:routes */}
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
         </Suspense>

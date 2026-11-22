@@ -53,7 +53,12 @@ app.use('/api/telegram', requireAuth, telegramRouter);
 
 if (config.staticDir && fs.existsSync(config.staticDir)) {
   app.use(express.static(config.staticDir));
-  app.get(/^(?!\/api\/).*/, (_req, res) => res.sendFile(path.join(config.staticDir, 'index.html')));
+  // Известные маршруты SPA → 200, остальное → та же оболочка со статусом 404 (её покажет NotFoundPage).
+  // Новый раздел верхнего уровня — добавить сюда; инструменты /tools/<id> покрыты шаблоном.
+  const KNOWN = /^\/(?:|notifications|profile|users|tools\/[\w-]+)\/?$/;
+  app.get(/^(?!\/api\/).*/, (req, res) =>
+    res.status(KNOWN.test(req.path) ? 200 : 404).sendFile(path.join(config.staticDir, 'index.html')),
+  );
 }
 
 app.use('/api', notFoundHandler);

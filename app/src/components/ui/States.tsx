@@ -26,7 +26,7 @@ export function EmptyState({ icon = 'inbox', title, text, action }: { icon?: str
   return (
     <div className="glass-card p-card-padding text-center py-12 space-y-2">
       <Icon name={icon} className="text-display-lg text-muted/60" />
-      <div className="font-display text-headline-md lg:text-display-lg-mobile text-on-surface">{title}</div>
+      <div className="font-display text-headline-md text-on-surface">{title}</div>
       {text && <div className="text-body-sm text-muted max-w-md mx-auto">{text}</div>}
       {action && <div className="pt-2">{action}</div>}
     </div>

@@ -31,8 +31,12 @@ const STATUS_TONE: Record<ProjectStatus, { tone: Tone; icon: string }> = {
 
 type Filter = 'all' | ProjectStatus;
 
-const money = (v: number) => `${v.toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ₸`;
-const moneyShort = (v: number) => `${v.toLocaleString('ru-RU', { notation: 'compact', maximumFractionDigits: 1 })} ₸`;
+/** Один форматтер на весь экран: узкий неразрывный пробел между разрядами и перед ₸ */
+const NBSP = ' ';
+const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
+const money = (v: number) => `${fmt.format(v).replace(/\s/g, NBSP)}${NBSP}₸`;
+const fmtShort = new Intl.NumberFormat('ru-RU', { notation: 'compact', maximumFractionDigits: 2 });
+const moneyShort = (v: number) => `${fmtShort.format(v).replace(/\s/g, NBSP)}${NBSP}₸`;
 const date = (iso?: string) => (iso ? new Date(`${iso}T00:00:00`).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '—');
 /** «1 250 000,5» → 1250000.5; пусто → undefined; мусор → NaN (его отклонит сервисный слой) */
 const parseNum = (s: string) => (s.trim() === '' ? undefined : Number(s.replace(/\s/g, '').replace(',', '.')));
@@ -102,7 +106,7 @@ export function ProjectsPage() {
                 sum.weightedYield === null ? (
                   <span className="text-muted">—</span>
                 ) : (
-                  <Delta value={sum.weightedYield} suffix=" %" />
+                  <Delta value={sum.weightedYield} digits={2} />
                 )
               }
               hint={sum.weightedYield === null ? 'нет данных о доходности' : 'средневзвешенная, % годовых'}
@@ -110,7 +114,7 @@ export function ProjectsPage() {
             <Stat label="Проектов" value={sum.count} hint={`в работе: ${sum.active}`} />
           </div>
 
-          <div className="hub-scroll-x -mx-4 px-4 overflow-x-auto lg:mx-0 lg:px-0">
+          <div className="hub-scroll-x hub-fade-x -mx-4 px-4 overflow-x-auto lg:mx-0 lg:px-0">
             <SegmentedControl
               className="hub-segmented"
               aria-label="Фильтр по статусу"

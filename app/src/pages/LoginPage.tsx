@@ -18,15 +18,15 @@ export function LoginPage() {
 
 function Shell({ subtitle, children, onSubmit }: { subtitle: string; children: ReactNode; onSubmit: (e: FormEvent) => void }) {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <main id="main" className="min-h-screen flex items-center justify-center p-4">
       <form onSubmit={onSubmit} className="glass-card w-full max-w-sm p-6 sm:p-8 space-y-5">
         <div>
-          <div className="mb-6"><BrandMark large /></div>
+          <h1 className="mb-6"><BrandMark large /></h1>
           <div className="eyebrow mt-1">{subtitle}</div>
         </div>
         {children}
       </form>
-    </div>
+    </main>
   );
 }
 
@@ -54,11 +54,11 @@ function LoginForm({ onRegister }: { onRegister?: () => void }) {
       <Field label="Пароль">
         <TextInput type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
       </Field>
-      <Button type="submit" className="w-full" loading={busy}>
+      <Button type="submit" icon="arrow_forward" className="w-full hub-btn-trail" loading={busy}>
         Войти
       </Button>
       {onRegister && (
-        <button type="button" className="w-full text-body-sm text-muted hover:text-gold transition-colors" onClick={onRegister}>
+        <button type="button" className="hub-link w-full text-body-sm text-muted hover:text-on-surface transition-colors" onClick={onRegister}>
           Нет аккаунта? Зарегистрироваться
         </button>
       )}
@@ -105,7 +105,7 @@ function RegisterForm({ onBack }: { onBack: () => void }) {
       <Button type="submit" className="w-full" loading={busy}>
         Отправить заявку
       </Button>
-      <button type="button" className="w-full text-body-sm text-muted hover:text-gold transition-colors" onClick={onBack}>
+      <button type="button" className="hub-link w-full text-body-sm text-muted hover:text-on-surface transition-colors" onClick={onBack}>
         Уже есть аккаунт? Войти
       </button>
     </Shell>

@@ -80,18 +80,21 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        // Акцентная антиква — только заголовки страниц и крупные цифры
-        display: ['"Instrument Serif"', 'Georgia', 'serif'],
+        // Текст и интерфейс: Onest — гротеск, нарисованный под кириллицу, спокойный и плотный
+        sans: ['"Onest Variable"', 'system-ui', 'sans-serif'],
+        // Заголовки и цифры: Geologica — острый геометрический гротеск с осями wght/SHRP/CRSV
+        display: ['"Geologica Variable"', '"Onest Variable"', 'sans-serif'],
       },
-      letterSpacing: { caps: '0.14em' },
+      letterSpacing: { caps: '0.06em' },
       fontSize: {
-        'display-lg': ['44px', { lineHeight: '48px', fontWeight: '400', letterSpacing: '-0.01em' }],
-        'display-lg-mobile': ['34px', { lineHeight: '38px', fontWeight: '400', letterSpacing: '-0.01em' }],
-        'headline-md': ['20px', { lineHeight: '28px', fontWeight: '700' }],
+        // Крупные цифры KPI и заголовки — контрастная шкала, отрицательный трекинг
+        figure: ['clamp(2rem, 1.4rem + 1.8vw, 2.75rem)', { lineHeight: '1', letterSpacing: '-0.035em' }],
+        'display-lg': ['clamp(2.5rem, 1.6rem + 2.6vw, 4rem)', { lineHeight: '0.95', letterSpacing: '-0.045em' }],
+        'display-lg-mobile': ['2.25rem', { lineHeight: '1', letterSpacing: '-0.04em' }],
+        'headline-md': ['20px', { lineHeight: '26px', letterSpacing: '-0.02em' }],
         'body-lg': ['16px', { lineHeight: '24px' }],
         'body-sm': ['14px', { lineHeight: '20px' }],
-        'label-bold': ['12px', { lineHeight: '16px', fontWeight: '700', letterSpacing: '0.04em' }],
+        'label-bold': ['13px', { lineHeight: '18px', fontWeight: '500' }],
       },
       spacing: { 'card-padding': '20px', 'container-padding': '32px' },
       boxShadow: {

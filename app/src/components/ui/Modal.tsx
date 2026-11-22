@@ -74,7 +74,7 @@ export function Modal({
   const body = (
     <>
       <div className="flex items-center justify-between px-card-padding pt-card-padding">
-        <h2 className="font-display text-headline-md lg:text-display-lg-mobile text-on-surface">{title}</h2>
+        <h2 className="font-display text-headline-md text-on-surface">{title}</h2>
         <button type="button" className="text-muted hover:text-on-surface p-2 -mr-2 rounded-full hover:bg-ice-100/10" onClick={onClose} aria-label="Закрыть">
           <Icon name="close" />
         </button>

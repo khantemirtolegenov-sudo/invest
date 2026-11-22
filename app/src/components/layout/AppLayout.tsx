@@ -16,14 +16,19 @@ import { Icon } from '../ui/Icon';
 
 export const PROJECT_NAME = 'Invest Hub';
 
-/** Знак бренда: монограмма в золотом кольце + название антиквой */
+/** Словесный знак: название Geologica, слова разделены золотой точкой — той же «жилой», что на рельефе */
 export function BrandMark({ large }: { large?: boolean }) {
+  const words = PROJECT_NAME.split(' ').filter(Boolean);
   return (
-    <span className="flex items-center gap-2.5 min-w-0">
-      <span className={`${large ? "w-11 h-11 text-headline-md" : "w-8 h-8 text-body-lg"} shrink-0 rounded-full border border-gold/50 flex items-center justify-center font-display text-gold leading-none`}>
-        {PROJECT_NAME.replace(/[^\p{L}\p{N}]/gu, '').slice(0, 1).toUpperCase() || '·'}
-      </span>
-      <span className={`font-display ${large ? "text-display-lg-mobile" : "text-headline-md"} text-on-surface truncate tracking-tight`}>{PROJECT_NAME}</span>
+    <span
+      className={`font-display font-semibold text-on-surface truncate leading-none ${large ? "text-[2rem] tracking-[-0.045em]" : "text-[1.3rem] tracking-[-0.04em]"}`}
+    >
+      {words.map((w, i) => (
+        <span key={i}>
+          {i > 0 && <span className="text-gold px-[0.08em]" aria-hidden>·</span>}
+          {w}
+        </span>
+      ))}
     </span>
   );
 }
@@ -118,6 +123,9 @@ export function AppLayout() {
   );
   return (
     <div className="min-h-screen lg:flex">
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[70] focus:px-4 focus:py-2 focus:rounded-full focus:bg-gold focus:text-obsidian-950 focus:font-medium">
+        К содержимому
+      </a>
       <aside className="hidden lg:block w-72 shrink-0 h-screen sticky top-0 p-3">
         <Glass className="hub-panel h-full flex flex-col p-4 gap-2">
           <div className="px-2 pt-2 pb-5">
@@ -152,7 +160,7 @@ export function AppLayout() {
           </div>
         </div>
       )}
-      <main className="flex-1 min-w-0">
+      <main id="main" tabIndex={-1} className="flex-1 min-w-0 outline-none">
         <Outlet />
       </main>
     </div>
@@ -163,15 +171,14 @@ export function AppLayout() {
 export function Page({ title, subtitle, actions, children }: { title: string; subtitle?: string; actions?: ReactNode; children: ReactNode }) {
   return (
     <div className="px-4 lg:px-container-padding py-6 lg:py-10 max-w-6xl mx-auto space-y-6">
-      <div className="space-y-4">
+      <div>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="min-w-0">
-            <h1 className="font-display text-display-lg-mobile lg:text-display-lg text-on-surface break-words">{title}</h1>
-            {subtitle && <p className="text-body-lg text-muted mt-1.5">{subtitle}</p>}
+            <h1 className="text-display-lg-mobile lg:text-display-lg text-on-surface break-words">{title}</h1>
+            {subtitle && <p className="text-body-lg text-muted mt-3">{subtitle}</p>}
           </div>
           {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
         </div>
-        <div className="gold-rule" />
       </div>
       {children}
     </div>

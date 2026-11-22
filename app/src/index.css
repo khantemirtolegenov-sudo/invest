@@ -1,22 +1,31 @@
 /**
- * Глобальные стили. Дизайн — «жидкое стекло» библиотеки glisse поверх тёмной палитры
- * Obsidian / Ice Grey / Champagne Gold. Переменные --lg-* перекрашивают компоненты glisse
- * в цвета бренда; значения согласованы с tailwind.config.js (менять парой).
+ * Глобальные стили. Идея: «стекло над рельефом капитала». Под интерфейсом медленно дрейфуют
+ * изолинии (Terrain.tsx); стеклянные элементы glisse — сайдбар, шапка, KPI, кнопки, фильтр —
+ * преломляют их по краю, как линза. Поэтому стекло почти прозрачное и почти не размыто:
+ * сильный blur и плотная заливка убивают эффект. Остальные поверхности — матовый obsidian,
+ * чтобы стекла не было «везде». Переменные --lg-* согласованы с tailwind.config.js.
  */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Тема glisse: всегда тёмная, в цветах бренда (селектор сильнее :where() библиотеки) */
 html[data-theme='dark'] {
   color-scheme: dark;
+  /* Рельеф */
+  --terrain-line: rgb(201 208 215 / 0.17);
+  --terrain-gold: rgb(212 184 120 / 0.55);
+  /* Тема glisse (селектор сильнее :where() библиотеки) */
   --lg-foreground: #e6eaee;
-  --lg-muted: rgb(152 162 173 / 0.9);
-  --lg-glass: rgb(26 26 31 / 0.55);
-  --lg-glass-active: rgb(42 42 49 / 0.7);
-  --lg-edge: rgb(230 234 238 / 0.1);
+  --lg-muted: rgb(152 162 173 / 0.95);
+  --lg-glass: rgb(22 22 27 / 0.12);
+  --lg-glass-active: rgb(48 48 56 / 0.5);
+  --lg-blur: 0.6px;
+  --lg-glass-bend: 4;
+  --lg-glass-dispersion: 0.35;
+  --lg-rim-shine: 0.32;
+  --lg-edge: rgb(230 234 238 / 0.14);
   --lg-selection: rgb(212 184 120 / 0.18);
-  --lg-surface: rgb(20 20 24 / 0.9);
+  --lg-surface: rgb(20 20 24 / 0.92);
   --lg-surface-edge: rgb(230 234 238 / 0.12);
   --lg-shadow: rgb(0 0 0 / 0.55);
   --lg-highlight: rgb(230 234 238 / 0.1);
@@ -25,60 +34,68 @@ html[data-theme='dark'] {
   --lg-track: rgb(230 234 238 / 0.22);
   --lg-on: #d4b878;
   --lg-fill: #d4b878;
-  --lg-ring: rgb(212 184 120 / 0.7);
+  --lg-ring: rgb(212 184 120 / 0.75);
 }
 
 @layer base {
   body {
     @apply bg-page-bg text-on-surface font-sans antialiased min-h-screen;
-    /* Фон-«сцена»: стеклу нужно что преломлять. Едва заметные блики ice и gold. */
-    background-image:
-      radial-gradient(60rem 40rem at 85% -10%, rgb(212 184 120 / 0.07), transparent 60%),
-      radial-gradient(50rem 40rem at -10% 110%, rgb(201 208 215 / 0.06), transparent 60%);
-    background-attachment: fixed;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    font-variation-settings: 'SHRP' 40;
   }
   ::selection {
     @apply bg-gold/30 text-on-surface;
   }
-  /* Поля ввода подсвечивают рамку сами — кольцо только у кнопок/ссылок */
+  /* Поля ввода подсвечивают рамку сами — кольцо только у ссылок и прочих фокусируемых */
   :focus-visible:not(input):not(textarea):not(select):not(.lg-button):not(.lg-switch) {
     @apply outline-none ring-2 ring-gold/70 ring-offset-2 ring-offset-page-bg;
   }
   select option {
     @apply bg-surface-container-low text-on-surface;
   }
-  /* Нативные чекбоксы/радио — в золото */
   input[type='checkbox'],
   input[type='radio'] {
     accent-color: theme('colors.gold.DEFAULT');
   }
-  /* Скроллбары в тон */
+  input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(0.75);
+    cursor: pointer;
+  }
   * {
     scrollbar-color: theme('colors.obsidian.700') transparent;
   }
 }
 
 @layer components {
-  /* Карточка — единый вид всех панелей: дымчатое стекло на obsidian */
+  /* Матовая поверхность (списки, формы). Имя историческое — его использует генератор. */
   .glass-card {
-    @apply rounded-xl border border-ice-100/10 shadow-card;
-    background-color: rgb(20 20 24 / 0.72);
-    -webkit-backdrop-filter: blur(18px) saturate(1.3);
-    backdrop-filter: blur(18px) saturate(1.3);
+    @apply rounded-xl border border-ice-100/10;
+    background: linear-gradient(180deg, rgb(26 26 31 / 0.92), rgb(17 17 21 / 0.94));
+    box-shadow: inset 0 1px 0 rgb(230 234 238 / 0.05), 0 18px 40px -24px rgb(0 0 0 / 0.9);
+  }
+  /* Стеклянная плитка glisse (KPI): линза над рельефом */
+  .hub-glass.lg-glass {
+    border-radius: 22px;
   }
   .material-symbols-outlined {
     font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
   }
 
-  /* Подпись-«капитель»: мелкий разреженный верхний регистр — подпись полей, разделов, KPI */
-  .eyebrow {
-    @apply text-label-bold uppercase tracking-caps text-muted font-semibold;
+  /* Цифры: Geologica, табличные и прописные — колонки сумм выравниваются, «1» не узкая */
+  .figure {
+    @apply font-display;
+    font-feature-settings: 'tnum', 'lnum';
+    font-variation-settings: 'SHRP' 0;
+    font-weight: 500;
   }
 
-  /* Волосяная линия с золотым началом — фирменный разделитель */
-  .gold-rule {
-    height: 1px;
-    background: linear-gradient(90deg, theme('colors.gold.DEFAULT') 0, theme('colors.gold.DEFAULT') 24px, rgb(230 234 238 / 0.1) 24px, rgb(230 234 238 / 0.04));
+  /* Подпись к значению (KPI, поля): строчными, мелко — информация, а не украшение */
+  .eyebrow {
+    @apply text-label-bold text-muted;
   }
 
   /* Кнопки glisse в нашей сетке размеров */
@@ -88,6 +105,11 @@ html[data-theme='dark'] {
   }
   .hub-btn.lg-button .material-symbols-outlined {
     font-size: 18px;
+    transition: translate 0.35s cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  /* Отклик в «глаголе движения» — иконка смещается по ходу действия, не просто цвет */
+  .hub-btn.lg-button:hover .material-symbols-outlined {
+    translate: 2px 0;
   }
   .hub-btn-sm.lg-button {
     height: 32px;
@@ -97,11 +119,20 @@ html[data-theme='dark'] {
   .hub-btn-sm.lg-button[data-icon] {
     padding-left: 9px;
   }
+  .hub-btn.lg-button:focus-visible {
+    outline-offset: 3px;
+  }
   /* Главная — золото, текст obsidian (контраст ≥ 9:1) */
   .hub-btn-primary.lg-button[data-variant='filled'] {
     color: theme('colors.obsidian.950');
     font-weight: 600;
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), 0 8px 24px -12px rgb(212 184 120 / 0.6);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.4), 0 10px 28px -12px rgb(212 184 120 / 0.65);
+  }
+  .hub-btn-primary.lg-button[data-variant='filled']:disabled {
+    background-color: rgb(230 234 238 / 0.08);
+    color: theme('colors.muted');
+    box-shadow: none;
+    opacity: 1;
   }
   .hub-btn-ghost.lg-button:not(:hover):not([data-pressed]) {
     background-color: transparent;
@@ -110,7 +141,6 @@ html[data-theme='dark'] {
     backdrop-filter: none;
   }
 
-  /* Select: своя стрелка вместо системной */
   .hub-select {
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5 6 7.5 9 4.5' fill='none' stroke='%2398A2AD' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -123,15 +153,57 @@ html[data-theme='dark'] {
   }
 }
 
-/* Плёночное зерно поверх фона — убирает «пластиковую» гладкость тёмных заливок */
-body::before {
-  content: '';
+/* Стеклянные панели каркаса (сайдбар, шапка) */
+.hub-panel.lg-glass {
+  border-radius: 24px;
+}
+
+/* Фильтр-сегменты glisse: выбранный — золотая подпись (выбранный фильтр = 5%-акцент) */
+.hub-segmented.lg-segmented {
+  --lg-tab-width: 136px;
+  --lg-tab-height: 38px;
+  --lg-segment-thumb: rgb(212 184 120 / 0.16);
+  --lg-segment-label: #c9d0d7;
+}
+.hub-segmented .lg-tab[data-selected],
+.hub-segmented .lg-tab-copy[data-selected] {
+  color: theme('colors.gold.DEFAULT');
+}
+.hub-scroll-x {
+  scrollbar-width: none;
+}
+.hub-scroll-x::-webkit-scrollbar {
+  display: none;
+}
+
+/* Рельеф: фиксирован под всем, дрейф медленный (90 с), только transform */
+.hub-terrain {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  overflow: hidden;
+  background:
+    radial-gradient(44rem 30rem at 78% 8%, rgb(212 184 120 / 0.1), transparent 70%),
+    radial-gradient(40rem 34rem at 10% 100%, rgb(201 208 215 / 0.07), transparent 70%);
+}
+.hub-terrain svg {
+  position: absolute;
+  inset: -6%;
+  width: 112%;
+  height: 112%;
+}
+.hub-terrain-drift {
+  animation: hub-drift 48s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes hub-drift {
+  from {
+    transform: translate3d(-40px, 0, 0);
+  }
+  to {
+    transform: translate3d(40px, -30px, 0);
+  }
 }
 #root {
   position: relative;
@@ -143,58 +215,37 @@ body::before {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
 
-/* Стеклянные панели каркаса (сайдбар, шапка) */
-.hub-panel.lg-glass {
-  border-radius: 22px;
-  --lg-blur: 24px;
-  background-color: rgb(16 16 20 / 0.62);
+/* Стрелка после подписи (CTA «Войти»): при наведении уезжает вперёд — отклик движением */
+.hub-btn-trail.lg-button[data-icon] {
+  flex-direction: row-reverse;
+  padding-left: 16px;
+  padding-right: 12px;
 }
-
-/* У Instrument Serif одно начертание — запрещаем браузеру «дорисовывать» жирный */
-.font-display {
-  font-weight: 400 !important;
-  font-synthesis: none;
+.hub-btn-trail.lg-button:hover .material-symbols-outlined {
+  translate: 4px 0;
 }
-.tabular-nums,
-table {
-  font-variant-numeric: tabular-nums;
+/* Текстовая ссылка: подчёркивание прорисовывается слева направо */
+.hub-link {
+  background: linear-gradient(currentColor, currentColor) no-repeat 50% 100% / 0 1px;
+  transition: background-size 0.35s cubic-bezier(0.2, 0.7, 0.1, 1), color 0.2s;
+  width: auto;
+  margin-inline: auto;
+  display: block;
+  padding-block: 4px;
 }
-
-/* Неактивная главная кнопка не тратит золото */
-.hub-btn-primary.lg-button[data-variant='filled']:disabled {
-  background-color: rgb(230 234 238 / 0.08);
-  color: theme('colors.muted');
-  box-shadow: none;
-  opacity: 1;
+.hub-link:hover,
+.hub-link:focus-visible {
+  background-size: 100% 1px;
 }
-/* Тёмная щель между кольцом фокуса и золотой кнопкой */
-.hub-btn.lg-button:focus-visible {
-  outline-offset: 3px;
-}
-
-/* Фильтр-сегменты glisse: выбранный — золотая подпись на стекле (выбранный фильтр = 5%-акцент) */
-.hub-segmented.lg-segmented {
-  --lg-tab-width: 136px;
-  --lg-tab-height: 38px;
-  --lg-segment-thumb: rgb(212 184 120 / 0.16);
-  --lg-segment-label: #c9d0d7;
-}
-.hub-segmented .lg-tab[data-selected],
-.hub-segmented .lg-tab-copy[data-selected] {
-  color: theme('colors.gold.DEFAULT');
-}
-input[type='date']::-webkit-calendar-picker-indicator {
-  filter: invert(0.75);
-  cursor: pointer;
-}
-/* Горизонтальная лента без системного скроллбара (свайп/колесо работают) */
-.hub-scroll-x {
-  scrollbar-width: none;
-}
-.hub-scroll-x::-webkit-scrollbar {
-  display: none;
+/* Лента фильтров на телефоне: правый край растворяется — видно, что дальше есть ещё */
+@media (max-width: 1099px) {
+  .hub-fade-x {
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+    mask-image: linear-gradient(90deg, #000 85%, transparent);
+  }
 }
